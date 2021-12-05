@@ -1,6 +1,5 @@
 import pygame
 
-
 if __name__ == '__main__':
     pygame.init()
     size = width, height = 800, 600
@@ -24,10 +23,19 @@ if __name__ == '__main__':
                 screen.fill(pygame.Color('blue'))
                 circle_radius = 0
                 circle_pos = event.pos
-                pygame.draw.circle(screen, color_round, circle_pos, circle_radius, circle_width)
+                # TODO Первый вариант
+                pygame.draw.circle(screen, color_round, circle_pos,
+                                   circle_radius, circle_width)
             if event.type == plus_radius and circle_exists:
                 circle_radius += 1
-                pygame.draw.circle(screen, color_round, circle_pos, circle_radius, circle_width)
+                # TODO Второй
+                pygame.draw.circle(
+                    screen,
+                    color_round,
+                    circle_pos,
+                    circle_radius,
+                    circle_width
+                )
         pygame.display.flip()
         clock.tick(50)
     pygame.quit()

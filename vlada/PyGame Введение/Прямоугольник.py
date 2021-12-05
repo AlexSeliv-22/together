@@ -3,7 +3,6 @@ import sys
 
 import pygame
 
-# TODO: добрый человек, я в упор не понимаю, что делает сия функция, просвети :)
 def create_logger(
     name: str,
     format_line: str = '%(levelname)s — %(message)s',
@@ -18,7 +17,6 @@ def create_logger(
     logger.setLevel(level)
     return logger
 
-# TODO: не очень понятно, зачем отдельно упоминать тип переменной. И "-> None" тоже нуждается в объяснении - что это и зачем.
 def draw(screen: pygame.display, width: int, height: int) -> None:
     color: pygame.Color = pygame.Color('red')
     screen.fill((0, 0, 0))
