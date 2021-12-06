@@ -1,7 +1,7 @@
 import pygame
 
 class Board:
-    def __init__(self, height, width):
+    def __init__(self, width, height):
         self.width = width
         self.height = height
         self.board = [[0] * width for _ in range(height)]
@@ -11,14 +11,16 @@ class Board:
         self.w = 1
         self.surface = screen
         self.on_click = (0, 0)
-        self.x = 0
-        self.y = 0
+        self.x = -1
+        self.y = -1
 
     def render(self, surface):
         self.surface = surface
         for i in range(self.height):
             for j in range(self.width):
-                pygame.draw.rect(self.surface, "white", (self.left + (i * self.cell_size), self.top + (j * self.cell_size), self.cell_size, self.cell_size), self.w)
+                pygame.draw.rect(self.surface, "white", (self.left + (j * self.cell_size),
+                                                         self.top + (i * self.cell_size),
+                                                         self.cell_size, self.cell_size), self.w)
 
     def set_view(self, left, top, cell_size):
         self.left = left
@@ -26,31 +28,39 @@ class Board:
         self.cell_size = cell_size
         for i in range(self.height):
             for j in range(self.width):
-                pygame.draw.rect(self.surface, "white", (self.left + (i * self.cell_size), self.top + (j * self.cell_size), self.cell_size, self.cell_size), self.w)
+                pygame.draw.rect(self.surface, "white", (self.left + (i * self.cell_size),
+                                                         self.top + (j * self.cell_size),
+                                                         self.cell_size, self.cell_size), self.w)
 
     def get_click(self, mouse_pos):
-        self.on_click = mouse_pos
+        # self.on_click = mouse_pos
+        pass
 
-    def get_cell(self):
-        a, b = self.on_click[0], self.on_click[1]
-        if a in range(self.left, self.left + (self.width*self.cell_size)) and b in range(self.top, self.top + (self.height*self.cell_size)):
-            for i in range(self.width):
-                for j in range(self.height):
-                    if a in range(i*self.cell_size, (i+1)*self.cell_size) and b in range(j*self.cell_size, (j+1)*self.cell_size):
-                        self.x, self.y = i, j
-                        break
+    def get_cell(self, mouse_pos):
+        a, b = mouse_pos[0], mouse_pos[1]
+        if a > self.left and a < self.left + (self.width*self.cell_size):
+            if b > self.top and b < self.top + (self.height*self.cell_size):
+                for i in range(self.height):
+                    for j in range(self.width):
+                        if a in range(self.left+j*self.cell_size, self.left+(j+1)*self.cell_size):
+                            if b in range(self.top+i*self.cell_size, self.top+(i+1)*self.cell_size):
+                                self.x, self.y = j, i
+                                break
+            else:
+                self.x, self.y = -1, -1
         else:
-            self.x, self.y = 0, 0
+            self.x, self.y = -1, -1
+
 
     def change(self):
         for i in range(self.height):
             for j in range(self.width):
-                if i == self.x - 1:
+                if i == self.y:
                     if self.board[i][j] == 0:
                         self.board[i][j] = 1
                     else:
                         self.board[i][j] = 0
-                elif j == self.y:
+                elif j == self.x:
                     if self.board[i][j] == 0:
                         self.board[i][j] = 1
                     else:
@@ -58,9 +68,13 @@ class Board:
         for i in range(self.height):
             for j in range(self.width):
                 if self.board[i][j] == 0:
-                    pygame.draw.rect(self.surface, "white", (self.left + (i * self.cell_size), self.top + (j * self.cell_size), self.cell_size, self.cell_size), self.w)
+                    pygame.draw.rect(self.surface, "white", (self.left + (j * self.cell_size),
+                                                             self.top + (i * self.cell_size), self.cell_size,
+                                                             self.cell_size), self.w)
                 else:
-                    pygame.draw.rect(self.surface, "white", (self.left + (i * self.cell_size), self.top + (j * self.cell_size), self.cell_size, self.cell_size))
+                    pygame.draw.rect(self.surface, "white", (self.left + (j * self.cell_size),
+                                                             self.top + (i * self.cell_size), self.cell_size,
+                                                             self.cell_size))
 
 
 if __name__ == '__main__':
@@ -79,7 +93,7 @@ if __name__ == '__main__':
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pos = event.pos
                 board.get_click(pos)
-                board.get_cell()
+                board.get_cell(pos)
                 screen.fill((0, 0, 0))
                 board.change()
         pygame.display.flip()
